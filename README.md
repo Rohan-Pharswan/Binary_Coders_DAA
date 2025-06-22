@@ -180,6 +180,11 @@ This system has the potential to save lives by ensuring that when disaster strik
 **Join us in making disaster response smarter, faster, and more effective.** 🚀
 
 ---
+## 🧑‍💻 Repository Creator
+*Rohan Pharswan*
+
+## 🤝 Collaborators
+- NEHANEGI02 – Minor contributions and suggestions
 
 ## 📧 Contact
 
