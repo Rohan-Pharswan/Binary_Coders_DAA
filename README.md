@@ -4,8 +4,6 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Flask](https://img.shields.io/badge/Flask-2.0+-green.svg)](https://flask.palletsprojects.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
 
 ---
 
@@ -34,8 +32,8 @@ Imagine a world where disaster relief isn't just reactive—it's **intelligent**
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/disaster-relief-system.git
-cd disaster-relief-system
+git clone https://github.com/Rohan-Pharswan/Binary_Coders_DAA.git
+cd Binary_Coders_DAA
 
 # Create virtual environment
 python -m venv venv
@@ -143,12 +141,6 @@ def optimize_supplies(self, supplies, capacity):
 
 We believe in the power of community! Here's how you can help:
 
-### 🐛 Bug Reports
-Found a bug? [Open an issue](https://github.com/yourusername/disaster-relief-system/issues) and let us know!
-
-### 💡 Feature Requests
-Have an idea? We'd love to hear it! Submit a feature request.
-
 ### 🔧 Code Contributions
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
@@ -181,12 +173,6 @@ Help us improve documentation, add examples, or create tutorials!
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 🌍 Impact
 
 This system has the potential to save lives by ensuring that when disaster strikes, help arrives faster, more efficiently, and more effectively. Every optimization, every saved minute, every better route could mean the difference between life and death.
@@ -195,10 +181,14 @@ This system has the potential to save lives by ensuring that when disaster strik
 
 ---
 
+## 📧 Contact
+
+If you found any issues or need to contact us, please reach out to: **rohanpharswan11@gmail.com**
+
+---
+
 <div align="center">
 
 **Made with ❤️ for a better world**
-
-[⭐ Star this repo](https://github.com/yourusername/disaster-relief-system) | [🐛 Report issues](https://github.com/yourusername/disaster-relief-system/issues) | [📖 Documentation](https://github.com/yourusername/disaster-relief-system/wiki)
 
 </div> 
