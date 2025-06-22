@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulation Logs - Disaster Relief System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2196F3;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #f44336;
+            --gray: #9E9E9E;
+            --dark: #333;
+            --light: #f5f5f5;
+        }
+        
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+        
+        .logs-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+        }
+        
+        .log-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .log-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .log-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .log-type {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .log-type.small {
+            background: #17a2b8;
+        }
+        
+        .log-type.large {
+            background: #6f42c1;
+        }
+        
+        .log-type.custom {
+            background: #28a745;
+        }
+        
+        .log-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .detail-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .log-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1976D2;
+            transform: translateY(-1px);
+        }
+        
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #45a049;
+            transform: translateY(-1px);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #d32f2f;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--gray);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #757575;
+            transform: translateY(-1px);
+        }
+        
+        .no-logs {
+            text-align: center;
+            padding: 50px;
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        .back-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .log-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .log-actions {
+                justify-content: center;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Home</a>
+        
+        <div class="header">
+            <h1>📋 Simulation Logs</h1>
+            <p>View and manage your saved disaster relief simulations</p>
+        </div>
+        
+        <div class="logs-container">
+            <h2 class="section-title">Saved Simulations</h2>
+            
+            {% if logs %}
+                {% for log in logs %}
+                <div class="log-item">
+                    <div class="log-header">
+                        <div class="log-title">Simulation {{ log.timestamp }}</div>
+                        <div class="log-type {{ log.type }}">{{ log.type.upper() }}</div>
+                    </div>
+                    
+                    <div class="log-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Date & Time</div>
+                            <div class="detail-value">{{ log.datetime[:19].replace('T', ' ') }}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Type</div>
+                            <div class="detail-value">{{ log.type.title() }} Setup</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">ID</div>
+                            <div class="detail-value">{{ log.id[:8] }}...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="log-actions">
+                        <a href="/load_log/{{ log.filename }}" class="btn btn-primary">🔄 Load Simulation</a>
+                        <a href="/download_log/{{ log.filename }}" class="btn btn-success">📥 Download Log</a>
+                        <button onclick="deleteLog('{{ log.filename }}')" class="btn btn-danger">🗑️ Delete</button>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-logs">
+                    <h3>No simulations found</h3>
+                    <p>Run a simulation (custom setup, small demo, or large demo) to see it appear here.</p>
+                    <a href="/landing" class="btn btn-primary">Start a Simulation</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function deleteLog(filename) {
+            if (confirm('Are you sure you want to delete this simulation log? This action cannot be undone.')) {
+                fetch(`/delete_log/${filename}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert('Log deleted successfully!');
+                        location.reload();
+                    } else {
+                        alert('Error deleting log: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error deleting log');
+                });
+            }
+        }
+    </script>
+</body>
+</html> 

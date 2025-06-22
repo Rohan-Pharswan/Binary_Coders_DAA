@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Disaster Relief Network Graph</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .graph-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+        
+        .controls {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        input, select, button {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            background: #1976D2;
+        }
+        
+        .error {
+            color: #f44336;
+            margin: 10px 0;
+        }
+        
+        .success {
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+        
+        #graph-image {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .control-panel {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .control-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        
+        .control-section h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        input, select {
+            margin: 5px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        button {
+            margin: 5px;
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .expand-button {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .expand-button:hover {
+            background-color: #1976D2;
+        }
+        
+        .control-panel {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .basic-controls {
+            margin-bottom: 20px;
+        }
+        
+        .advanced-controls {
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
+        
+        .control-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        /* Add animation for expanding/collapsing */
+        .advanced-controls {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        
+        .advanced-controls.show {
+            max-height: 2000px; /* Large enough to show all content */
+        }
+        
+        .menu-button {
+            background-color: #2196F3;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 200px;
+        }
+        
+        .menu-button:hover {
+            background-color: #1976D2;
+            transform: translateY(-2px);
+        }
+        
+        .return-button {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        
+        .return-button:hover {
+            background-color: #d32f2f;
+        }
+        
+        .operation-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .operation-section {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 10px 0;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .operation-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        input, select {
+            margin: 5px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 20px);
+            max-width: 300px;
+        }
+        
+        .action-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .action-button:hover {
+            background-color: #45a049;
+        }
+        
+        #message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+            max-width: 300px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .error-message {
+            background-color: #f44336;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .info-message {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .operation-section input,
+        .operation-section select,
+        .operation-section button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        /* Supply validation styles */
+        .supply-input-container {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 5px 0;
+        }
+        
+        .input-group input,
+        .input-group select {
+            flex: 1;
+            margin: 0;
+        }
+        
+        .food-category {
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .food-category.food {
+            background-color: #e8f5e8;
+            border-color: #4CAF50;
+        }
+        
+        .food-category.non-food {
+            background-color: #fff3e0;
+            border-color: #FFC107;
+        }
+        
+        .category-label {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .food-category.food .category-label {
+            color: #4CAF50;
+        }
+        
+        .food-category.non-food .category-label {
+            color: #FFC107;
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .supply-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            background: white;
+        }
+        
+        .supply-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+            margin: 2px 0;
+        }
+        
+        .supply-item:last-child {
+            border-bottom: none;
+        }
+        
+        .remove-supply {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        /* Tooltip styles for dynamic options */
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            overflow: visible;
+        }
+        
+        .tooltip {
+            position: fixed;
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            pointer-events: none;
+            max-width: 250px;
+            white-space: normal;
+            line-height: 1.4;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .tooltip-container:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .tooltip.top {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: normal;
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+        
+        .tooltip.top::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #333 transparent transparent transparent;
+        }
+        
+        .help-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #2196F3;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: help;
+            margin-left: 5px;
+        }
+        
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .input-group input,
+        .input-group select {
+            flex: 1;
+        }
+
+        .form-error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+            background-color: #ffebee;
+            padding: 5px;
+            border-radius: 3px;
+            border: 1px solid #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 Disaster Relief Network Graph</h1>
+        
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="/logs" style="background: var(--success); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: 500; margin: 0 10px;">📋 View Logs</a>
+            <a href="/landing" style="background: var(--primary); color: white; padding: 10px 20px; border-radius: 25px; text-decoration: none; font-weight: 500; margin: 0 10px;">🏠 Back to Home</a>
+        </div>
+        
+        <div class="control-panel">
+            <!-- Main Menu Button -->
+            <button id="doMoreButton" class="menu-button" onclick="showOperationButtons()">Do More...</button>
+            
+            <!-- Operation Buttons -->
+            <div id="operationButtons" class="operation-buttons hidden">
+                <button class="menu-button" onclick="showOperation('blockUnblock')">Block/Unblock Road</button>
+                <button class="menu-button" onclick="showOperation('addNode')">Add New Node</button>
+                <button class="menu-button" onclick="showOperation('deleteNode')">Delete Node</button>
+                <button class="menu-button" onclick="showOperation('updateSupplies')">Update Supplies</button>
+                <button class="menu-button" onclick="showOperation('addWarehouseSupplies')">Add Warehouse Supplies</button>
+                <button class="menu-button" onclick="showOperation('connectNodes')">Connect Nodes</button>
+                <button class="menu-button" onclick="showOperation('addVehicle')">Add Vehicle</button>
+            </div>
+            
+            <!-- Block/Unblock Operation -->
+            <div id="blockUnblockSection" class="operation-section hidden">
+                <h3>Block/Unblock Road</h3>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="text" id="from-node" placeholder="From Location">
+                        <div class="tooltip top">Enter the name of the starting location for the road you want to block/unblock</div>
+                    </div>
+                    <span class="help-icon" title="From location">?</span>
+                </div>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="text" id="to-node" placeholder="To Location">
+                        <div class="tooltip top">Enter the name of the destination location for the road you want to block/unblock</div>
+                    </div>
+                    <span class="help-icon" title="To location">?</span>
+                </div>
+                <button class="action-button" onclick="blockRoad()">Block Road</button>
+                <button class="action-button" onclick="unblockRoad()">Unblock Road</button>
+                <button class="return-button" onclick="returnToMenu()">Return to Menu</button>
+            </div>
+            
+            <!-- Add Node Operation -->
+            <div id="addNodeSection" class="operation-section hidden">
+                <h3>Add New Node</h3>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="text" id="new-node-name" placeholder="Node Name">
+                        <div class="tooltip top">Enter a unique name for this new location (e.g., Hospital B, Shelter C, Warehouse 2)</div>
+                    </div>
+                    <span class="help-icon" title="Node name">?</span>
+                </div>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <select id="node-type">
+                            <option value="affected">Affected Area</option>
+                            <option value="hospital">Hospital</option>
+                            <option value="shelter">Shelter</option>
+                            <option value="warehouse">Warehouse</option>
+                        </select>
+                        <div class="tooltip top">Select the type of location. Affected areas, hospitals, and shelters need supplies delivered</div>
+                    </div>
+                    <span class="help-icon" title="Node type">?</span>
+                </div>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="number" id="node-x" placeholder="X Coordinate">
+                        <div class="tooltip top">X coordinate (0-100). Used for distance calculations and visual positioning on the map</div>
+                    </div>
+                    <span class="help-icon" title="X coordinate">?</span>
+                </div>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="number" id="node-y" placeholder="Y Coordinate">
+                        <div class="tooltip top">Y coordinate (0-100). Used for distance calculations and visual positioning on the map</div>
+                    </div>
+                    <span class="help-icon" title="Y coordinate">?</span>
+                </div>
+                <button class="action-button" onclick="addNewNode()">Add Node</button>
+                <button class="return-button" onclick="returnToMenu()">Return to Menu</button>
+            </div>
+            
+            <!-- Delete Node Operation -->
+            <div id="deleteNodeSection" class="operation-section hidden">
+                <h3>Delete Node</h3>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="text" id="delete-node-name" placeholder="Node Name">
+                        <div class="tooltip top">Enter the exact name of the location you want to remove from the network</div>
+                    </div>
+                    <span class="help-icon" title="Node name">?</span>
+                </div>
+                <button class="action-button" onclick="deleteNode()">Delete Node</button>
+                <button class="return-button" onclick="returnToMenu()">Return to Menu</button>
+            </div>
+            
+            <!-- Update Supplies Operation -->
+            <div id="updateSuppliesSection" class="operation-section hidden">
+                <h3>Update Supplies</h3>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="text" id="supply-node-name" placeholder="Node Name">
+                        <div class="tooltip top">Enter the name of the location that needs additional supplies (cannot be a warehouse)</div>
+                    </div>
+                    <span class="help-icon" title="Node name">?</span>
+                </div>
+                
+                <!-- Supply Input with Validation -->
+                <div class="supply-input-container">
+                    <div class="input-group">
+                        <div class="tooltip-container">
+                            <input type="text" id="new-supply-name" placeholder="Supply Name" onchange="validateDynamicSupplyCategory(this)">
+                            <div class="tooltip top">Enter the name of the supply item. The system will automatically detect if it's food or non-food</div>
+                        </div>
+                        <span class="help-icon" title="Supply name">?</span>
+                    </div>
+                    <div class="input-group">
+                        <div class="tooltip-container">
+                            <select id="new-supply-category" onchange="validateDynamicCategorySelection(this)" required>
+                                <option value="">Select Category</option>
+                                <option value="food">Food</option>
+                                <option value="non-food">Non-Food</option>
+                            </select>
+                            <div class="tooltip top">Select whether this is a food or non-food item. Food items have 10% higher capacity requirements</div>
+                        </div>
+                        <span class="help-icon" title="Supply category">?</span>
+                    </div>
+                    <div class="food-category" id="dynamic-food-options" style="display: none;">
+                        <span class="category-label">Food Item Options</span>
+                        <div class="input-group">
+                            <div class="tooltip-container">
+                                <select id="dynamic-food-type" onchange="updateDynamicWeightPlaceholder(this)" style="flex: 1">
+                                    <option value="">Select Type</option>
+                                    <option value="solid">Solid</option>
+                                    <option value="liquid">Liquid</option>
+                                </select>
+                                <div class="tooltip top">Select whether this food item is solid (measured in kg) or liquid (measured in liters)</div>
+                            </div>
+                            <span class="help-icon" title="Food type">?</span>
+                        </div>
+                    </div>
+                    <div class="form-error-message" id="dynamic-error" style="display: none;"></div>
+                </div>
+                
+                <button class="action-button" onclick="addSupplyToList()">Add to List</button>
+                <div id="supply-list" class="supply-list"></div>
+                <button class="action-button" onclick="updateSupplies()">Update Supplies</button>
+                <button class="return-button" onclick="returnToMenu()">Return to Menu</button>
+            </div>
+            
+            <!-- Add Warehouse Supplies Operation -->
+            <div id="addWarehouseSuppliesSection" class="operation-section hidden">
+                <h3>Add Supplies to Warehouse</h3>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="text" id="warehouse-name" placeholder="Warehouse Name">
+                        <div class="tooltip top">Enter the name of the warehouse where you want to add new supplies</div>
+                    </div>
+                    <span class="help-icon" title="Warehouse name">?</span>
+                </div>
+                
+                <!-- Warehouse Supply Input with Full Specifications -->
+                <div class="supply-input-container">
+                    <div class="input-group">
+                        <div class="tooltip-container">
+                            <input type="text" id="warehouse-supply-name" placeholder="Supply Name" onchange="validateWarehouseSupplyCategory(this)">
+                            <div class="tooltip top">Enter the name of the supply item. The system will automatically detect if it's food or non-food</div>
+                        </div>
+                        <span class="help-icon" title="Supply name">?</span>
+                    </div>
+                    <div class="input-group">
+                        <div class="tooltip-container">
+                            <input type="number" id="warehouse-supply-weight" placeholder="Weight" step="0.1" min="0">
+                            <div class="tooltip top">Enter the weight of the supply item in kg or liters</div>
+                        </div>
+                        <span class="help-icon" title="Weight">?</span>
+                    </div>
+                    <div class="input-group">
+                        <div class="tooltip-container">
+                            <input type="number" id="warehouse-supply-value" placeholder="Value" step="0.1" min="0">
+                            <div class="tooltip top">Enter the priority value of the supply item (higher value = higher priority)</div>
+                        </div>
+                        <span class="help-icon" title="Value">?</span>
+                    </div>
+                    <div class="input-group">
+                        <div class="tooltip-container">
+                            <select id="warehouse-supply-category" onchange="validateWarehouseCategorySelection(this)" required>
+                                <option value="">Select Category</option>
+                                <option value="food">Food</option>
+                                <option value="non-food">Non-Food</option>
+                            </select>
+                            <div class="tooltip top">Select whether this is a food or non-food item. Food items have 10% higher capacity requirements</div>
+                        </div>
+                        <span class="help-icon" title="Supply category">?</span>
+                    </div>
+                    <div class="food-category" id="warehouse-food-options" style="display: none;">
+                        <span class="category-label">Food Item Options</span>
+                        <div class="input-group">
+                            <div class="tooltip-container">
+                                <select id="warehouse-food-type" style="flex: 1">
+                                    <option value="">Select Type</option>
+                                    <option value="solid">Solid</option>
+                                    <option value="liquid">Liquid</option>
+                                </select>
+                                <div class="tooltip top">Select whether this food item is solid (measured in kg) or liquid (measured in liters)</div>
+                            </div>
+                            <span class="help-icon" title="Food type">?</span>
+                        </div>
+                    </div>
+                    <div class="form-error-message" id="warehouse-error" style="display: none;"></div>
+                </div>
+                
+                <button class="action-button" onclick="addWarehouseSupplyToList()">Add to List</button>
+                <div id="warehouse-supply-list" class="supply-list"></div>
+                <button class="action-button" onclick="addWarehouseSupplies()">Add to Warehouse</button>
+                <button class="return-button" onclick="returnToMenu()">Return to Menu</button>
+            </div>
+            
+            <!-- Connect Nodes Operation -->
+            <div id="connectNodesSection" class="operation-section hidden">
+                <h3>Connect Nodes</h3>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="text" id="connect-from" placeholder="From Node">
+                        <div class="tooltip top">Enter the name of the starting location for the new road connection</div>
+                    </div>
+                    <span class="help-icon" title="From node">?</span>
+                </div>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="text" id="connect-to" placeholder="To Node">
+                        <div class="tooltip top">Enter the name of the destination location for the new road connection</div>
+                    </div>
+                    <span class="help-icon" title="To node">?</span>
+                </div>
+                <div class="input-group">
+                    <div class="tooltip-container">
+                        <input type="number" id="edge-weight" placeholder="Weight">
+                        <div class="tooltip top">Enter the distance/weight between locations. Used for route optimization calculations</div>
+                    </div>
+                    <span class="help-icon" title="Weight">?</span>
+                </div>
+                <button class="action-button" onclick="connectNodes()">Connect Nodes</button>
+                <button class="return-button" onclick="returnToMenu()">Return to Menu</button>
+            </div>
+
+            <!-- Add Vehicle Operation -->
+            <div id="addVehicleSection" class="operation-section hidden">
+                <h3>Add New Vehicle</h3>
+                <input type="text" id="new-vehicle-name" placeholder="Vehicle Name">
+                <input type="number" id="vehicle-capacity" placeholder="Capacity">
+                <button class="action-button" onclick="addNewVehicle()">Add Vehicle</button>
+                <button class="return-button" onclick="returnToMenu()">Return to Menu</button>
+            </div>
+        </div>
+        
+        <div id="message"></div>
+        
+        <div class="graph-container">
+            <img id="graph-image" src="{{ url_for('static', filename=image) }}" alt="Network Graph">
+        </div>
+    </div>
+
+    <script>
+        function showMessage(message, isError = false, isLoading = false) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'block';
+            
+            // Clear any existing classes
+            messageDiv.className = '';
+            
+            // Add appropriate styling
+            if (isLoading) {
+                messageDiv.classList.add('info-message');
+                message = `<span class="loading-spinner"></span>${message}`;
+            } else if (isError) {
+                messageDiv.classList.add('error-message');
+            } else {
+                messageDiv.classList.add('success-message');
+            }
+            
+            messageDiv.innerHTML = message;
+            
+            // Auto-hide success/error messages after 3 seconds
+            if (!isLoading) {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function hideMessage() {
+            const messageDiv = document.getElementById('message');
+            messageDiv.style.display = 'none';
+        }
+        
+        function updateGraph(imagePath) {
+            const img = document.getElementById('graph-image');
+            // Force browser to reload image by adding timestamp
+            const timestamp = new Date().getTime();
+            img.src = "{{ url_for('static', filename='') }}" + imagePath + '?t=' + timestamp;
+            
+            // Add onload handler to verify image loading
+            img.onload = function() {
+                console.log('Graph image loaded successfully');
+                showMessage('Graph updated successfully');
+            };
+            img.onerror = function() {
+                console.error('Failed to load graph image');
+                showMessage('Failed to update graph visualization', true);
+            };
+        }
+        
+        async function blockRoad() {
+            const fromNode = document.getElementById('from-node').value;
+            const toNode = document.getElementById('to-node').value;
+            
+            if (!fromNode || !toNode) {
+                showMessage('Please enter both locations', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/block_road', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        from: fromNode,
+                        to: toNode
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showMessage(data.message);
+                    updateGraph(data.image);
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('An error occurred', true);
+            }
+        }
+        
+        async function unblockRoad() {
+            const fromNode = document.getElementById('from-node').value;
+            const toNode = document.getElementById('to-node').value;
+            
+            if (!fromNode || !toNode) {
+                showMessage('Please enter both locations', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/unblock_road', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        from: fromNode,
+                        to: toNode
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(data.message);
+                    updateGraph(data.image);
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('An error occurred', true);
+            }
+        }
+
+        async function addNewNode() {
+            const name = document.getElementById('new-node-name').value;
+            const type = document.getElementById('node-type').value;
+            const x = document.getElementById('node-x').value;
+            const y = document.getElementById('node-y').value;
+            
+            if (!name || !type) {
+                showMessage('Please enter node name and type', true);
+                return;
+            }
+            
+            showMessage('Adding new node...', false, true);
+            
+            try {
+                const response = await fetch('/add_node', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        type: type,
+                        x: parseFloat(x) || 0,
+                        y: parseFloat(y) || 0
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showMessage('Updating graph visualization...', false, true);
+                    
+                    // Create a new image element
+                    const newImg = new Image();
+                    const timestamp = new Date().getTime();
+                    newImg.src = "{{ url_for('static', filename='') }}" + data.image + '?t=' + timestamp;
+                    
+                    newImg.onload = function() {
+                        // Replace the old image
+                        document.getElementById('graph-image').src = newImg.src;
+                        showMessage(data.message);
+                        
+                        // Clear the input fields
+                        document.getElementById('new-node-name').value = '';
+                        document.getElementById('node-x').value = '';
+                        document.getElementById('node-y').value = '';
+                        document.getElementById('node-type').value = 'affected';
+                        
+                        // Return to menu after a short delay
+                        setTimeout(() => {
+                            returnToMenu();
+                        }, 2000);
+                    };
+                    
+                    newImg.onerror = function() {
+                        showMessage('Failed to update graph visualization', true);
+                    };
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                console.error('Error adding node:', error);
+                showMessage('An error occurred while adding node', true);
+            }
+        }
+
+        async function deleteNode() {
+            const name = document.getElementById('delete-node-name').value;
+            
+            if (!name) {
+                showMessage('Please enter node name', true);
+                return;
+            }
+            
+            showMessage('Deleting node...', false, true);
+            
+            try {
+                const response = await fetch('/delete_node', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showMessage('Updating graph visualization...', false, true);
+                    
+                    // Create a new image element
+                    const newImg = new Image();
+                    const timestamp = new Date().getTime();
+                    newImg.src = "{{ url_for('static', filename='') }}" + data.image + '?t=' + timestamp;
+                    
+                    newImg.onload = function() {
+                        // Replace the old image
+                        document.getElementById('graph-image').src = newImg.src;
+                        showMessage(data.message);
+                        
+                        // Clear the input field
+                        document.getElementById('delete-node-name').value = '';
+                        
+                        // Return to menu after a short delay
+                        setTimeout(() => {
+                            returnToMenu();
+                        }, 2000);
+                    };
+                    
+                    newImg.onerror = function() {
+                        showMessage('Failed to update graph visualization', true);
+                    };
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                console.error('Error deleting node:', error);
+                showMessage('An error occurred while deleting node', true);
+            }
+        }
+
+        async function updateSupplies() {
+            const name = document.getElementById('supply-node-name').value;
+            
+            if (!name) {
+                showMessage('Please enter node name', true);
+                return;
+            }
+            
+            if (supplyList.length === 0) {
+                showMessage('Please add at least one supply to the list', true);
+                return;
+            }
+            
+            // Extract just the supply names from the list
+            const supplies = supplyList.map(item => item.name);
+            
+            showMessage('Updating supplies and recalculating routes...', false, true);
+            
+            try {
+                const response = await fetch('/update_supplies', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        supplies: supplies
+                    })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Updating graph visualization...', false, true);
+                    
+                    // Create a new image element
+                    const newImg = new Image();
+                    const timestamp = new Date().getTime();
+                    newImg.src = "{{ url_for('static', filename='') }}" + data.image + '?t=' + timestamp;
+                    
+                    newImg.onload = function() {
+                        // Replace the old image
+                        document.getElementById('graph-image').src = newImg.src;
+                        
+                        // Show success message and warning if present
+                        if (data.warning) {
+                            showMessage(`Supplies updated but: ${data.warning}`, false);
+                            // Show add vehicle prompt
+                            if (data.vehicles_needed) {
+                                setTimeout(() => {
+                                    if (confirm(`Need ${data.vehicles_needed} more vehicle(s). Would you like to add a vehicle now?`)) {
+                                        showOperation('addVehicle');
+                                        return;
+                                    }
+                                    returnToMenu();
+                                }, 1000);
+                            }
+                        } else {
+                            showMessage('Supplies updated successfully!');
+                            // Return to menu after a short delay
+                            setTimeout(() => {
+                                returnToMenu();
+                            }, 1000);
+                        }
+                        
+                        // Clear the input fields and supply list
+                        document.getElementById('supply-node-name').value = '';
+                        supplyList = [];
+                        updateSupplyListDisplay();
+                    };
+                    
+                    newImg.onerror = function() {
+                        showMessage('Failed to update graph visualization', true);
+                    };
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('An error occurred while updating supplies', true);
+            }
+        }
+
+        async function connectNodes() {
+            const fromNode = document.getElementById('connect-from').value;
+            const toNode = document.getElementById('connect-to').value;
+            const weight = document.getElementById('edge-weight').value;
+            
+            if (!fromNode || !toNode) {
+                showMessage('Please enter both node names', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/connect_nodes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        from: fromNode,
+                        to: toNode,
+                        weight: parseFloat(weight) || 1.0
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showMessage(data.message);
+                    updateGraph(data.image);
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('An error occurred', true);
+            }
+        }
+
+        async function addNewVehicle() {
+            const name = document.getElementById('new-vehicle-name').value;
+            const capacity = document.getElementById('vehicle-capacity').value;
+            
+            if (!name || !capacity) {
+                showMessage('Please enter vehicle name and capacity', true);
+                return;
+            }
+            
+            showMessage('Adding new vehicle...', false, true);
+            
+            try {
+                const response = await fetch('/add_vehicle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        capacity: parseFloat(capacity)
+                    })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Updating graph visualization...', false, true);
+                    
+                    // Create a new image element
+                    const newImg = new Image();
+                    const timestamp = new Date().getTime();
+                    newImg.src = "{{ url_for('static', filename='') }}" + data.image + '?t=' + timestamp;
+                    
+                    newImg.onload = function() {
+                        // Replace the old image
+                        document.getElementById('graph-image').src = newImg.src;
+                        showMessage('Vehicle added successfully!');
+                        
+                        // Clear the input fields
+                        document.getElementById('new-vehicle-name').value = '';
+                        document.getElementById('vehicle-capacity').value = '';
+                        
+                        // Return to menu after a short delay
+                        setTimeout(() => {
+                            returnToMenu();
+                        }, 1000);
+                    };
+                    
+                    newImg.onerror = function() {
+                        showMessage('Failed to update graph visualization', true);
+                    };
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('An error occurred while adding vehicle', true);
+            }
+        }
+
+        function showOperationButtons() {
+            document.getElementById('doMoreButton').classList.add('hidden');
+            document.getElementById('operationButtons').classList.remove('hidden');
+        }
+        
+        function hideAllOperations() {
+            const sections = [
+                'blockUnblockSection',
+                'addNodeSection',
+                'deleteNodeSection',
+                'updateSuppliesSection',
+                'addWarehouseSuppliesSection',
+                'connectNodesSection',
+                'addVehicleSection',
+                'operationButtons'
+            ];
+            
+            sections.forEach(section => {
+                document.getElementById(section).classList.add('hidden');
+            });
+        }
+        
+        function showOperation(operation) {
+            hideAllOperations();
+            document.getElementById(operation + 'Section').classList.remove('hidden');
+        }
+        
+        function returnToMenu() {
+            hideAllOperations();
+            document.getElementById('operationButtons').classList.remove('hidden');
+        }
+
+        function returnToMain() {
+            hideAllOperations();
+            document.getElementById('doMoreButton').classList.remove('hidden');
+        }
+
+        // Initialize with only Do More button visible
+        document.addEventListener('DOMContentLoaded', function() {
+            hideAllOperations();
+            document.getElementById('doMoreButton').classList.remove('hidden');
+        });
+        
+        // Food and non-food item lists for dynamic validation
+        const foodItems = [
+            'water', 'food', 'rice', 'bread', 'milk', 'juice', 'soup', 'cereal', 
+            'pasta', 'beans', 'vegetables', 'fruits', 'meat', 'fish', 'eggs', 
+            'cheese', 'yogurt', 'butter', 'oil', 'sugar', 'salt', 'flour', 
+            'canned food', 'dried food', 'baby food', 'formula', 'snacks', 
+            'chocolate', 'cookies', 'crackers', 'nuts', 'seeds', 'honey', 
+            'jam', 'sauce', 'condiments', 'beverages', 'tea', 'coffee',
+            'pizza', 'burger', 'sandwich', 'hot dog', 'taco', 'burrito',
+            'sushi', 'salad', 'soup', 'stew', 'curry', 'noodles', 'spaghetti',
+            'lasagna', 'macaroni', 'potato', 'tomato', 'onion', 'garlic',
+            'carrot', 'broccoli', 'spinach', 'lettuce', 'cabbage', 'cauliflower',
+            'pepper', 'cucumber', 'mushroom', 'corn', 'peas', 'beans',
+            'apple', 'banana', 'orange', 'grape', 'strawberry', 'blueberry',
+            'raspberry', 'blackberry', 'peach', 'pear', 'plum', 'cherry',
+            'lemon', 'lime', 'grapefruit', 'pineapple', 'mango', 'papaya',
+            'avocado', 'coconut', 'olive', 'raisin', 'prune', 'date',
+            'beef', 'pork', 'chicken', 'turkey', 'lamb', 'duck', 'goose',
+            'bacon', 'sausage', 'ham', 'pepperoni', 'salami', 'prosciutto',
+            'salmon', 'tuna', 'cod', 'shrimp', 'crab', 'lobster', 'clam',
+            'oyster', 'mussel', 'squid', 'octopus', 'anchovy', 'sardine',
+            'cake', 'pie', 'donut', 'muffin', 'croissant', 'bagel', 'biscuit',
+            'pancake', 'waffle', 'french toast', 'omelette', 'scrambled eggs',
+            'fried eggs', 'boiled eggs', 'poached eggs', 'deviled eggs',
+            'ice cream', 'yogurt', 'pudding', 'custard', 'jello', 'gelatin',
+            'candy', 'gum', 'lollipop', 'caramel', 'toffee', 'fudge',
+            'popcorn', 'chips', 'pretzel', 'cheese puff', 'corn chip',
+            'salsa', 'guacamole', 'hummus', 'dip', 'spread', 'butter',
+            'margarine', 'mayonnaise', 'mustard', 'ketchup', 'relish',
+            'pickle', 'olive', 'caper', 'herb', 'spice', 'seasoning',
+            'vinegar', 'lemon juice', 'lime juice', 'orange juice',
+            'apple juice', 'grape juice', 'cranberry juice', 'tomato juice',
+            'vegetable juice', 'smoothie', 'milkshake', 'hot chocolate',
+            'cocoa', 'coffee', 'tea', 'herbal tea', 'green tea', 'black tea',
+            'white tea', 'oolong tea', 'chai tea', 'mint tea', 'chamomile tea',
+            'food', 'meal', 'nutrition', 'protein', 'vitamin', 'mineral',
+            'carbohydrate', 'fat', 'fiber', 'calorie', 'nutrient', 'diet',
+            'breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'appetizer',
+            'main course', 'side dish', 'beverage', 'drink', 'refreshment'
+        ];
+        
+        const nonFoodItems = [
+            'medicine', 'blankets', 'clothing', 'tents', 'tools', 'batteries', 
+            'flashlights', 'generators', 'fuel', 'hygiene', 'soap', 'toothpaste', 
+            'shampoo', 'toilet paper', 'diapers', 'bandages', 'first aid', 
+            'medical supplies', 'equipment', 'machinery', 'electronics', 
+            'communication', 'radios', 'phones', 'computers', 'books', 
+            'educational materials', 'toys', 'games', 'sports equipment', 
+            'construction materials', 'building supplies', 'furniture', 
+            'bedding', 'pillows', 'mattresses', 'cooking utensils', 'pots', 
+            'pans', 'plates', 'cups', 'cutlery', 'storage containers', 
+            'bags', 'backpacks', 'shoes', 'boots', 'hats', 'gloves', 
+            'protective gear', 'masks', 'goggles', 'helmets', 'vests',
+            'blanket', 'towel', 'sheet', 'curtain', 'carpet', 'rug',
+            'medicine', 'pill', 'tablet', 'capsule', 'syrup', 'ointment',
+            'cream', 'lotion', 'gel', 'spray', 'inhaler', 'injection',
+            'bandage', 'gauze', 'tape', 'splint', 'cast', 'brace',
+            'wheelchair', 'crutch', 'walker', 'cane', 'stretcher',
+            'thermometer', 'stethoscope', 'blood pressure', 'monitor',
+            'defibrillator', 'oxygen', 'ventilator', 'dialysis',
+            'surgical', 'scalpel', 'forceps', 'clamp', 'suture',
+            'disinfectant', 'antiseptic', 'sanitizer', 'alcohol',
+            'glove', 'mask', 'gown', 'cap', 'shoe cover', 'apron',
+            'equipment', 'device', 'apparatus', 'instrument', 'tool',
+            'machine', 'motor', 'engine', 'pump', 'compressor', 'fan',
+            'heater', 'cooler', 'refrigerator', 'freezer', 'oven',
+            'stove', 'microwave', 'blender', 'mixer', 'grinder',
+            'drill', 'saw', 'hammer', 'screwdriver', 'wrench', 'pliers',
+            'wire', 'cable', 'pipe', 'tube', 'valve', 'connector',
+            'battery', 'charger', 'adapter', 'converter', 'transformer',
+            'generator', 'solar panel', 'wind turbine', 'fuel cell',
+            'gasoline', 'diesel', 'propane', 'natural gas', 'kerosene',
+            'lamp', 'bulb', 'light', 'lantern', 'candle', 'torch',
+            'radio', 'television', 'speaker', 'microphone', 'antenna',
+            'phone', 'mobile', 'smartphone', 'tablet', 'laptop',
+            'computer', 'printer', 'scanner', 'camera', 'projector',
+            'book', 'magazine', 'newspaper', 'journal', 'manual',
+            'document', 'form', 'chart', 'map', 'calendar', 'clock',
+            'watch', 'timer', 'stopwatch', 'alarm', 'bell', 'whistle',
+            'toy', 'game', 'puzzle', 'card', 'dice', 'board',
+            'ball', 'bat', 'racket', 'net', 'goal', 'target',
+            'rope', 'chain', 'cable', 'wire', 'string', 'thread',
+            'fabric', 'cloth', 'textile', 'fiber', 'yarn', 'wool',
+            'cotton', 'silk', 'linen', 'nylon', 'polyester', 'leather',
+            'plastic', 'rubber', 'metal', 'wood', 'glass', 'ceramic',
+            'paper', 'cardboard', 'foam', 'sponge', 'brush', 'broom',
+            'mop', 'bucket', 'container', 'box', 'bag', 'basket',
+            'shelf', 'rack', 'stand', 'table', 'chair', 'bench',
+            'bed', 'mattress', 'pillow', 'cushion', 'carpet', 'rug',
+            'curtain', 'blind', 'shade', 'screen', 'partition', 'wall',
+            'door', 'window', 'gate', 'fence', 'barrier', 'sign',
+            'label', 'tag', 'sticker', 'tape', 'glue', 'adhesive',
+            'nail', 'screw', 'bolt', 'nut', 'washer', 'rivet',
+            'hinge', 'lock', 'key', 'handle', 'knob', 'button',
+            'switch', 'lever', 'pedal', 'wheel', 'gear', 'pulley',
+            'spring', 'shock', 'damper', 'filter', 'screen', 'mesh',
+            'net', 'fence', 'barrier', 'wall', 'partition', 'divider'
+        ];
+        
+        // Supply list management
+        let supplyList = [];
+        
+        function validateDynamicSupplyCategory(input) {
+            const supplyName = input.value.toLowerCase().trim();
+            const categorySelect = document.getElementById('new-supply-category');
+            const errorDiv = document.getElementById('dynamic-error');
+            const foodOptions = document.getElementById('dynamic-food-options');
+            
+            if (!supplyName) {
+                errorDiv.style.display = 'none';
+                foodOptions.style.display = 'none';
+                return;
+            }
+            
+            const isFood = foodItems.some(item => supplyName.includes(item));
+            const isNonFood = nonFoodItems.some(item => supplyName.includes(item));
+            
+            // Always validate against current category selection
+            if (categorySelect.value) {
+                validateDynamicCategorySelection(categorySelect);
+                return;
+            }
+            
+            // Auto-select category if supply name is clear
+            if (isFood && !isNonFood) {
+                // This is clearly a food item
+                categorySelect.value = 'food';
+                toggleDynamicFoodOptions(categorySelect);
+                errorDiv.style.display = 'none';
+            } else if (isNonFood && !isFood) {
+                // This is clearly a non-food item
+                categorySelect.value = 'non-food';
+                foodOptions.style.display = 'none';
+                foodOptions.className = 'food-category non-food';
+                errorDiv.style.display = 'none';
+            } else if (isFood && isNonFood) {
+                // Ambiguous - both food and non-food keywords found
+                errorDiv.textContent = 'Ambiguous item. Please manually select the appropriate category.';
+                errorDiv.style.display = 'block';
+                foodOptions.style.display = 'none';
+            } else {
+                // Not recognized
+                errorDiv.textContent = 'Item not recognized. Please check spelling or manually select category.';
+                errorDiv.style.display = 'block';
+                foodOptions.style.display = 'none';
+            }
+        }
+        
+        function validateDynamicCategorySelection(select) {
+            const category = select.value;
+            const supplyNameInput = document.getElementById('new-supply-name');
+            const supplyName = supplyNameInput.value.toLowerCase().trim();
+            const errorDiv = document.getElementById('dynamic-error');
+            const foodOptions = document.getElementById('dynamic-food-options');
+            
+            if (category === '') {
+                errorDiv.style.display = 'none';
+                foodOptions.style.display = 'none';
+                return;
+            }
+            
+            // Check if supply name is provided
+            if (!supplyName) {
+                if (category === 'food') {
+                    foodOptions.style.display = 'block';
+                    foodOptions.className = 'food-category food';
+                } else {
+                    foodOptions.style.display = 'none';
+                    foodOptions.className = 'food-category non-food';
+                }
+                errorDiv.style.display = 'none';
+                return;
+            }
+            
+            // Validate category against supply name
+            const isFood = foodItems.some(item => supplyName.includes(item));
+            const isNonFood = nonFoodItems.some(item => supplyName.includes(item));
+            
+            if (category === 'food') {
+                if (isNonFood && !isFood) {
+                    // Non-food item selected in food category - FORCE CORRECTION
+                    errorDiv.textContent = 'This is a non-food item. Automatically corrected to "Non-Food" category.';
+                    errorDiv.style.display = 'block';
+                    select.value = 'non-food';
+                    foodOptions.style.display = 'none';
+                    foodOptions.className = 'food-category non-food';
+                } else if (isFood && !isFood) {
+                    // Food item correctly selected in food category
+                    foodOptions.style.display = 'block';
+                    foodOptions.className = 'food-category food';
+                    errorDiv.style.display = 'none';
+                } else if (isFood && isNonFood) {
+                    // Ambiguous - both food and non-food keywords found
+                    errorDiv.textContent = 'Ambiguous item. Please clarify the supply name or manually select category.';
+                    errorDiv.style.display = 'block';
+                    foodOptions.style.display = 'block';
+                    foodOptions.className = 'food-category food';
+                } else {
+                    // Not recognized - allow manual selection but warn
+                    errorDiv.textContent = 'Item not recognized. Please ensure correct spelling or manually select category.';
+                    errorDiv.style.display = 'block';
+                    foodOptions.style.display = 'block';
+                    foodOptions.className = 'food-category food';
+                }
+            } else if (category === 'non-food') {
+                if (isFood && !isFood) {
+                    // Food item selected in non-food category - FORCE CORRECTION
+                    errorDiv.textContent = 'This is a food item. Automatically corrected to "Food" category.';
+                    errorDiv.style.display = 'block';
+                    select.value = 'food';
+                    foodOptions.style.display = 'block';
+                    foodOptions.className = 'food-category food';
+                } else if (isNonFood && !isFood) {
+                    // Non-food item correctly selected in non-food category
+                    foodOptions.style.display = 'none';
+                    foodOptions.className = 'food-category non-food';
+                    errorDiv.style.display = 'none';
+                } else if (isFood && isNonFood) {
+                    // Ambiguous - both food and non-food keywords found
+                    errorDiv.textContent = 'Ambiguous item. Please clarify the supply name or manually select category.';
+                    errorDiv.style.display = 'block';
+                    foodOptions.style.display = 'none';
+                    foodOptions.className = 'food-category non-food';
+                } else {
+                    // Not recognized - allow manual selection but warn
+                    errorDiv.textContent = 'Item not recognized. Please ensure correct spelling or manually select category.';
+                    errorDiv.style.display = 'block';
+                    foodOptions.style.display = 'none';
+                    foodOptions.className = 'food-category non-food';
+                }
+            }
+        }
+        
+        function toggleDynamicFoodOptions(select) {
+            const foodOptions = document.getElementById('dynamic-food-options');
+            const errorDiv = document.getElementById('dynamic-error');
+            
+            if (select.value === 'food') {
+                foodOptions.style.display = 'block';
+                foodOptions.className = 'food-category food';
+                errorDiv.style.display = 'none';
+            } else if (select.value === 'non-food') {
+                foodOptions.style.display = 'none';
+                foodOptions.className = 'food-category non-food';
+                errorDiv.style.display = 'none';
+            } else {
+                foodOptions.style.display = 'none';
+                errorDiv.style.display = 'none';
+            }
+        }
+        
+        function updateDynamicWeightPlaceholder(select) {
+            // This function can be used to update placeholders if needed
+            console.log('Food type selected:', select.value);
+        }
+        
+        function addSupplyToList() {
+            const supplyName = document.getElementById('new-supply-name').value.trim();
+            const category = document.getElementById('new-supply-category').value;
+            const foodType = document.getElementById('dynamic-food-type').value;
+            
+            if (!supplyName || !category) {
+                showMessage('Please enter supply name and select category', true);
+                return;
+            }
+            
+            // Check if supply already exists in list
+            if (supplyList.some(item => item.name.toLowerCase() === supplyName.toLowerCase())) {
+                showMessage('This supply is already in the list', true);
+                return;
+            }
+            
+            const supplyItem = {
+                name: supplyName,
+                category: category,
+                foodType: foodType
+            };
+            
+            supplyList.push(supplyItem);
+            updateSupplyListDisplay();
+            
+            // Clear input fields
+            document.getElementById('new-supply-name').value = '';
+            document.getElementById('new-supply-category').value = '';
+            document.getElementById('dynamic-food-type').value = '';
+            document.getElementById('dynamic-food-options').style.display = 'none';
+            document.getElementById('dynamic-error').style.display = 'none';
+            
+            showMessage(`Added ${supplyName} to supply list`);
+        }
+        
+        function updateSupplyListDisplay() {
+            const supplyListDiv = document.getElementById('supply-list');
+            supplyListDiv.innerHTML = '';
+            
+            supplyList.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'supply-item';
+                itemDiv.innerHTML = `
+                    <span>${item.name} (${item.category})${item.foodType ? ' - ' + item.foodType : ''}</span>
+                    <button class="remove-supply" onclick="removeSupplyFromList(${index})">✕</button>
+                `;
+                supplyListDiv.appendChild(itemDiv);
+            });
+        }
+        
+        function removeSupplyFromList(index) {
+            const removedItem = supplyList.splice(index, 1)[0];
+            updateSupplyListDisplay();
+            showMessage(`Removed ${removedItem.name} from supply list`);
+        }
+
+        // Warehouse supplies functionality
+        let warehouseSupplyList = [];
+
+        function validateWarehouseSupplyCategory(input) {
+            const supplyName = input.value.toLowerCase();
+            const categorySelect = document.getElementById('warehouse-supply-category');
+            const foodOptions = document.getElementById('warehouse-food-options');
+            const errorDiv = document.getElementById('warehouse-error');
+            
+            // Food items list (same as in the main form)
+            const foodItems = [
+                'water', 'food', 'rice', 'bread', 'milk', 'juice', 'soup', 'cereal', 
+                'pasta', 'beans', 'vegetables', 'fruits', 'meat', 'fish', 'eggs', 
+                'cheese', 'yogurt', 'butter', 'oil', 'sugar', 'salt', 'flour', 
+                'canned food', 'dried food', 'baby food', 'formula', 'snacks', 
+                'chocolate', 'cookies', 'crackers', 'nuts', 'seeds', 'honey', 
+                'jam', 'sauce', 'condiments', 'beverages', 'tea', 'coffee',
+                'pizza', 'burger', 'sandwich', 'hot dog', 'taco', 'burrito',
+                'sushi', 'salad', 'soup', 'stew', 'curry', 'noodles', 'spaghetti',
+                'lasagna', 'macaroni', 'potato', 'tomato', 'onion', 'garlic',
+                'carrot', 'broccoli', 'spinach', 'lettuce', 'cabbage', 'cauliflower',
+                'pepper', 'cucumber', 'mushroom', 'corn', 'peas', 'beans',
+                'apple', 'banana', 'orange', 'grape', 'strawberry', 'blueberry',
+                'raspberry', 'blackberry', 'peach', 'pear', 'plum', 'cherry',
+                'lemon', 'lime', 'grapefruit', 'pineapple', 'mango', 'papaya',
+                'avocado', 'coconut', 'olive', 'raisin', 'prune', 'date',
+                'beef', 'pork', 'chicken', 'turkey', 'lamb', 'duck', 'goose',
+                'bacon', 'sausage', 'ham', 'pepperoni', 'salami', 'prosciutto',
+                'salmon', 'tuna', 'cod', 'shrimp', 'crab', 'lobster', 'clam',
+                'oyster', 'mussel', 'squid', 'octopus', 'anchovy', 'sardine',
+                'cake', 'pie', 'donut', 'muffin', 'croissant', 'bagel', 'biscuit',
+                'pancake', 'waffle', 'french toast', 'omelette', 'scrambled eggs',
+                'fried eggs', 'boiled eggs', 'poached eggs', 'deviled eggs',
+                'ice cream', 'yogurt', 'pudding', 'custard', 'jello', 'gelatin',
+                'candy', 'gum', 'lollipop', 'caramel', 'toffee', 'fudge',
+                'popcorn', 'chips', 'pretzel', 'cheese puff', 'corn chip',
+                'salsa', 'guacamole', 'hummus', 'dip', 'spread', 'butter',
+                'margarine', 'mayonnaise', 'mustard', 'ketchup', 'relish',
+                'pickle', 'olive', 'caper', 'herb', 'spice', 'seasoning',
+                'vinegar', 'lemon juice', 'lime juice', 'orange juice',
+                'apple juice', 'grape juice', 'cranberry juice', 'tomato juice',
+                'vegetable juice', 'smoothie', 'milkshake', 'hot chocolate',
+                'cocoa', 'coffee', 'tea', 'herbal tea', 'green tea', 'black tea',
+                'white tea', 'oolong tea', 'chai tea', 'mint tea', 'chamomile tea',
+                'food', 'meal', 'nutrition', 'protein', 'vitamin', 'mineral',
+                'carbohydrate', 'fat', 'fiber', 'calorie', 'nutrient', 'diet',
+                'breakfast', 'lunch', 'dinner', 'snack', 'dessert', 'appetizer',
+                'main course', 'side dish', 'beverage', 'drink', 'refreshment'
+            ];
+            
+            // Non-food items list (same as in the main form)
+            const nonFoodItems = [
+                'medicine', 'blankets', 'clothing', 'tents', 'tools', 'batteries', 
+                'flashlights', 'generators', 'fuel', 'hygiene', 'soap', 'toothpaste', 
+                'shampoo', 'toilet paper', 'diapers', 'bandages', 'first aid', 
+                'medical supplies', 'equipment', 'machinery', 'electronics', 
+                'communication', 'radios', 'phones', 'computers', 'books', 
+                'educational materials', 'toys', 'games', 'sports equipment', 
+                'construction materials', 'building supplies', 'furniture', 
+                'bedding', 'pillows', 'mattresses', 'cooking utensils', 'pots', 
+                'pans', 'plates', 'cups', 'cutlery', 'storage containers', 
+                'bags', 'backpacks', 'shoes', 'boots', 'hats', 'gloves', 
+                'protective gear', 'masks', 'goggles', 'helmets', 'vests',
+                'blanket', 'towel', 'sheet', 'curtain', 'carpet', 'rug',
+                'medicine', 'pill', 'tablet', 'capsule', 'syrup', 'ointment',
+                'cream', 'lotion', 'gel', 'spray', 'inhaler', 'injection',
+                'bandage', 'gauze', 'tape', 'splint', 'cast', 'brace',
+                'wheelchair', 'crutch', 'walker', 'cane', 'stretcher',
+                'thermometer', 'stethoscope', 'blood pressure', 'monitor',
+                'defibrillator', 'oxygen', 'ventilator', 'dialysis',
+                'surgical', 'scalpel', 'forceps', 'clamp', 'suture',
+                'disinfectant', 'antiseptic', 'sanitizer', 'alcohol',
+                'glove', 'mask', 'gown', 'cap', 'shoe cover', 'apron',
+                'equipment', 'device', 'apparatus', 'instrument', 'tool',
+                'machine', 'motor', 'engine', 'pump', 'compressor', 'fan',
+                'heater', 'cooler', 'refrigerator', 'freezer', 'oven',
+                'stove', 'microwave', 'blender', 'mixer', 'grinder',
+                'drill', 'saw', 'hammer', 'screwdriver', 'wrench', 'pliers',
+                'wire', 'cable', 'pipe', 'tube', 'valve', 'connector',
+                'battery', 'charger', 'adapter', 'converter', 'transformer',
+                'generator', 'solar panel', 'wind turbine', 'fuel cell',
+                'gasoline', 'diesel', 'propane', 'natural gas', 'kerosene',
+                'lamp', 'bulb', 'light', 'lantern', 'candle', 'torch',
+                'radio', 'television', 'speaker', 'microphone', 'antenna',
+                'phone', 'mobile', 'smartphone', 'tablet', 'laptop',
+                'computer', 'printer', 'scanner', 'camera', 'projector',
+                'book', 'magazine', 'newspaper', 'journal', 'manual',
+                'document', 'form', 'chart', 'map', 'calendar', 'clock',
+                'watch', 'timer', 'stopwatch', 'alarm', 'bell', 'whistle',
+                'toy', 'game', 'puzzle', 'card', 'dice', 'board',
+                'ball', 'bat', 'racket', 'net', 'goal', 'target',
+                'rope', 'chain', 'cable', 'wire', 'string', 'thread',
+                'fabric', 'cloth', 'textile', 'fiber', 'yarn', 'wool',
+                'cotton', 'silk', 'linen', 'nylon', 'polyester', 'leather',
+                'plastic', 'rubber', 'metal', 'wood', 'glass', 'ceramic',
+                'paper', 'cardboard', 'foam', 'sponge', 'brush', 'broom',
+                'mop', 'bucket', 'container', 'box', 'bag', 'basket',
+                'shelf', 'rack', 'stand', 'table', 'chair', 'bench',
+                'bed', 'mattress', 'pillow', 'cushion', 'carpet', 'rug',
+                'curtain', 'blind', 'shade', 'screen', 'partition', 'wall',
+                'door', 'window', 'gate', 'fence', 'barrier', 'sign',
+                'label', 'tag', 'sticker', 'tape', 'glue', 'adhesive',
+                'nail', 'screw', 'bolt', 'nut', 'washer', 'rivet',
+                'hinge', 'lock', 'key', 'handle', 'knob', 'button',
+                'switch', 'lever', 'pedal', 'wheel', 'gear', 'pulley',
+                'spring', 'shock', 'damper', 'filter', 'screen', 'mesh',
+                'net', 'fence', 'barrier', 'wall', 'partition', 'divider'
+            ];
+            
+            // Check if it's a food item
+            const isFood = foodItems.some(item => supplyName.includes(item));
+            const isNonFood = nonFoodItems.some(item => supplyName.includes(item));
+            
+            if (isFood && !isNonFood) {
+                categorySelect.value = 'food';
+                foodOptions.style.display = 'block';
+                foodOptions.className = 'food-category food';
+                errorDiv.style.display = 'none';
+            } else if (isNonFood && !isFood) {
+                categorySelect.value = 'non-food';
+                foodOptions.style.display = 'none';
+                foodOptions.className = 'food-category non-food';
+                errorDiv.style.display = 'none';
+            } else if (isFood && isNonFood) {
+                // Ambiguous case - show error
+                errorDiv.textContent = 'Supply name is ambiguous. Please manually select category.';
+                errorDiv.style.display = 'block';
+            } else {
+                // Unknown item - let user select manually
+                categorySelect.value = '';
+                foodOptions.style.display = 'none';
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        function validateWarehouseCategorySelection(select) {
+            const foodOptions = document.getElementById('warehouse-food-options');
+            const errorDiv = document.getElementById('warehouse-error');
+            
+            if (select.value === 'food') {
+                foodOptions.style.display = 'block';
+                foodOptions.className = 'food-category food';
+                errorDiv.style.display = 'none';
+            } else if (select.value === 'non-food') {
+                foodOptions.style.display = 'none';
+                foodOptions.className = 'food-category non-food';
+                errorDiv.style.display = 'none';
+            } else {
+                foodOptions.style.display = 'none';
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        function addWarehouseSupplyToList() {
+            const name = document.getElementById('warehouse-supply-name').value;
+            const weight = parseFloat(document.getElementById('warehouse-supply-weight').value);
+            const value = parseFloat(document.getElementById('warehouse-supply-value').value);
+            const category = document.getElementById('warehouse-supply-category').value;
+            const foodType = document.getElementById('warehouse-food-type').value;
+            
+            if (!name || isNaN(weight) || isNaN(value) || !category) {
+                showMessage('Please fill in all required fields (name, weight, value, category)', true);
+                return;
+            }
+            
+            if (category === 'food' && !foodType) {
+                showMessage('Please select food type (solid/liquid) for food items', true);
+                return;
+            }
+            
+            const supply = {
+                name: name,
+                weight: weight,
+                value: value,
+                category: category,
+                food_type: category === 'food' ? foodType : null
+            };
+            
+            warehouseSupplyList.push(supply);
+            updateWarehouseSupplyListDisplay();
+            
+            // Clear input fields
+            document.getElementById('warehouse-supply-name').value = '';
+            document.getElementById('warehouse-supply-weight').value = '';
+            document.getElementById('warehouse-supply-value').value = '';
+            document.getElementById('warehouse-supply-category').value = '';
+            document.getElementById('warehouse-food-type').value = '';
+            document.getElementById('warehouse-food-options').style.display = 'none';
+            
+            showMessage('Supply added to list');
+        }
+
+        function updateWarehouseSupplyListDisplay() {
+            const listDiv = document.getElementById('warehouse-supply-list');
+            listDiv.innerHTML = '';
+            
+            warehouseSupplyList.forEach((supply, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'supply-item';
+                itemDiv.innerHTML = `
+                    <span>${supply.name} (${supply.weight}kg, Value: ${supply.value}, ${supply.category}${supply.food_type ? ', ' + supply.food_type : ''})</span>
+                    <button class="remove-supply" onclick="removeWarehouseSupply(${index})">Remove</button>
+                `;
+                listDiv.appendChild(itemDiv);
+            });
+        }
+
+        function removeWarehouseSupply(index) {
+            warehouseSupplyList.splice(index, 1);
+            updateWarehouseSupplyListDisplay();
+        }
+
+        async function addWarehouseSupplies() {
+            const warehouseName = document.getElementById('warehouse-name').value;
+            
+            if (!warehouseName) {
+                showMessage('Please enter warehouse name', true);
+                return;
+            }
+            
+            if (warehouseSupplyList.length === 0) {
+                showMessage('Please add at least one supply to the list', true);
+                return;
+            }
+            
+            showMessage('Adding supplies to warehouse and recalculating routes...', false, true);
+            
+            try {
+                const response = await fetch('/add_warehouse_supplies', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        warehouse_name: warehouseName,
+                        supplies: warehouseSupplyList
+                    })
+                });
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Updating graph visualization...', false, true);
+                    
+                    // Create a new image element
+                    const newImg = new Image();
+                    const timestamp = new Date().getTime();
+                    newImg.src = "{{ url_for('static', filename='') }}" + data.image + '?t=' + timestamp;
+                    
+                    newImg.onload = function() {
+                        // Replace the old image
+                        document.getElementById('graph-image').src = newImg.src;
+                        showMessage('Supplies added to warehouse successfully!');
+                        
+                        // Clear the input fields and supply list
+                        document.getElementById('warehouse-name').value = '';
+                        warehouseSupplyList = [];
+                        updateWarehouseSupplyListDisplay();
+                        
+                        // Return to menu after a short delay
+                        setTimeout(() => {
+                            returnToMenu();
+                        }, 1000);
+                    };
+                    
+                    newImg.onerror = function() {
+                        showMessage('Failed to update graph visualization', true);
+                    };
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('An error occurred while adding warehouse supplies', true);
+            }
+        }
+    </script>
+</body>
+</html>
