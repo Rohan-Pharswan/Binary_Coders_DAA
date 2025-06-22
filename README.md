@@ -184,7 +184,9 @@ This system has the potential to save lives by ensuring that when disaster strik
 *Rohan Pharswan*
 
 ## 🤝 Collaborators
-- NEHANEGI02 
+- NEHANEGI02
+- GarvSidhwan01
+- Lakshyabhatt
 
 ## 📧 Contact
 
